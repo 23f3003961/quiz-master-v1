@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Available Quizzes</h2>
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Chapter</th>
+            <th>Quiz Name</th>
+            <th>Action</th>
+        </tr>
+        {% for quiz in available_quizzes %}
+        <tr>
+            <td>{{ quiz[0] }}</td>
+            <td>{{ quiz[1] }}</td>
+            <td>{{ quiz[3] }}</td>
+            <td><a href="{{ url_for('attempt_quiz', quiz_id=quiz[2]) }}">Attempt Quiz</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <h2>Previously Attempted Quizzes</h2>
+    <table>
+        <tr>
+            <th>Subject Name</th>
+            <th>Chapter Name</th>
+            <th>Quiz Name</th>
+            <th>Score(%)</th>
+            <th>Date and Time of Attempted quiz</th>
+        </tr>
+        {% for attempt in attempted_quizzes %}
+        <tr>
+            <td>{{ attempt[0] }}</td>
+            <td>{{ attempt[1] }}</td>
+            <td>{{ attempt[2] }}</td>
+            <td>{{ (attempt[3] / attempt[4]) * 100 if attempt[4] else 0 }}%</td>
+            <td>{{ attempt[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+

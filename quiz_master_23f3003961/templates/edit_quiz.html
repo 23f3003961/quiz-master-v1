@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .container { width: 50%; margin: auto; padding-top: 20px; }
+        .header { background: #333; color: white; padding: 15px; text-align: center; }
+        h2 { text-align: center; }
+        form { text-align: center; margin-top: 20px; }
+        input, select { padding: 8px; margin: 5px; width: 90%; }
+        button { padding: 8px 12px; border: none; cursor: pointer; background: #4CAF50; color: white; }
+        .cancel-btn { background: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><strong>Edit Quiz</strong></h1>
+    </div>
+    <div class="container">
+        <h2>Edit Quiz Details</h2>
+        <form method="POST" action="{{ url_for('edit_quiz', quiz_id=quiz.id) }}">
+            <input type="text" name="name" value="{{ quiz.name }}" required>
+            
+            <select name="chapter_id" required>
+                {% for chapter in chapters %}
+                    <option value="{{ chapter.id }}" {% if chapter.id == quiz.chapter_id %}selected{% endif %}>
+                        {{ chapter.name }}
+                    </option>
+                {% endfor %}
+            </select>   
+            <input type="date" name="date_of_quiz" value="{{ quiz.date_of_quiz.strftime('%Y-%m-%d') }}" required>
+            <input type="number" name="time_duration" value="{{ quiz.time_duration }}" required>
+            <input type="text" name="remarks" value="{{ quiz.remarks }}">
+            <button type="submit">Update Quiz</button>
+            <a href="{{ url_for('manage_quizzes') }}">
+                <button type="button" class="cancel-btn">Cancel</button>
+            </a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .container { width: 90%; margin: auto; padding-top: 20px; }
+        .header { background: #333; color: white; padding: 15px; text-align: center; }
+        .nav { background: #444; padding: 10px; text-align: center; }
+        .nav a { color: white; margin: 0 15px; text-decoration: none; }
+        h1 { text-align: center; margin-top: 20px; }
+        form { text-align: center; margin-bottom: 20px; }
+        input, select { padding: 8px; margin: 5px; }
+        button { padding: 8px 12px; margin: 5px; border: none; cursor: pointer; }
+        .add-btn { background: #4CAF50; color: white; }
+        .edit-btn { background: #FFC107; color: black; }
+        .delete-btn { background: #f44336; color: white; }
+        .add-question-btn { background: #2196F3; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px; transition: background 0.3s ease; }
+        .add-question-btn:hover { background: #1976D2; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #333; color: white; }
+        .btn-container { text-align: center; display: flex; justify-content: center; gap: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Manage Questions</h1>
+    <div class="nav">
+        <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+        <a href="{{ url_for('manage_users') }}">Manage Users</a>
+        <a href="{{ url_for('manage_subjects') }}">Manage Subjects</a>
+        <a href="{{ url_for('manage_chapters') }}">Manage Chapters</a>
+        <a href="{{ url_for('manage_quizzes') }}">Manage Quizzes</a>
+    </div>
+    
+    <form method="get" action="{{ url_for('manage_questions') }}">
+        <label for="subject">Select Subject:</label>
+        <select name="subject" id="subject" onchange="this.form.submit()">
+            <option value="">-- Select Subject --</option>
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}" {% if selected_subject|int == subject.id %}selected{% endif %}>{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    
+        <label for="chapter">Select Chapter:</label>
+        <select name="chapter" id="chapter" onchange="this.form.submit()">
+            <option value="">-- Select Chapter --</option>
+            {% for chapter in chapters %}
+            <option value="{{ chapter.id }}" {% if selected_chapter|int == chapter.id %}selected{% endif %}>{{ chapter.name }}</option>
+            {% endfor %}
+        </select>
+    
+        <label for="quiz">Select Quiz:</label>
+        <select name="quiz" id="quiz" onchange="this.form.submit()">
+            <option value="">-- Select Quiz --</option>
+            {% for quiz in quizzes %}
+            <option value="{{ quiz.id }}" {% if selected_quiz|int == quiz.id %}selected{% endif %}>{{ quiz.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if selected_quiz %}
+        <a href="{{ url_for('add_question', quiz=selected_quiz) }}">
+            <button class="add-question-btn">Add Questions</button>
+        </a>
+    {% endif %}
+
+    {% if questions %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Options</th>
+                <th>Correct Answer</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set counter = 1 %}
+            {% for question in questions %}
+            <tr>
+                <td>{{ counter }}</td>
+                <td>{{ question.question_statement }}</td>
+                <td>
+                    Option 1. {{ question.option1 }}<br>
+                    Option 2. {{ question.option2 }}<br>
+                    Option 3. {{ question.option3 }}<br>
+                    Option 4. {{ question.option4 }}<br>
+                </td>
+                <td>{{ question.correct_option }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('edit_question', question_id=question.id) }}">
+                        <button class="edit-btn">Edit</button>
+                    </a>
+                    <a href="{{ url_for('delete_question', question_id=question.id) }}">
+                        <button class="delete-btn" onclick="return confirm('Are you sure you want to delete this question?');">Delete</button>
+                    </a>
+                </td>
+                
+            </tr>
+            {% set counter = counter + 1 %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Choose the above filters to add questions.</p>
+    {% endif %}
+</body>
+</html>
+

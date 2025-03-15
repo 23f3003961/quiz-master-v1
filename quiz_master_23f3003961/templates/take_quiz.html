@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Take Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ quiz.name }}</h2>
+    <form action="{{ url_for('take_quiz', quiz_id=quiz.id) }}" method="POST">
+        {% for question in questions %}
+        <div class="question">
+            <p>{{ loop.index }}. {{ question.question_statement }}</p>
+            <input type="radio" name="question_{{ question.id }}" value="option1"> {{ question.option1 }}<br>
+            <input type="radio" name="question_{{ question.id }}" value="option2"> {{ question.option2 }}<br>
+            <input type="radio" name="question_{{ question.id }}" value="option3"> {{ question.option3 }}<br>
+            <input type="radio" name="question_{{ question.id }}" value="option4"> {{ question.option4 }}<br>
+        </div>
+        {% endfor %}
+        <button type="submit">Submit Quiz</button>
+    </form>
+</body>
+</html>

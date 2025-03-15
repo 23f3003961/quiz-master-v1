@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .container { width: 90%; margin: auto; padding-top: 20px; }
+        .header { background: #333; color: white; padding: 15px; text-align: center; }
+        .nav { background: #444; padding: 10px; text-align: center; }
+        .nav a { color: white; margin: 0 15px; text-decoration: none; }
+        h1 { text-align: center; margin-top: 20px; }
+        form { text-align: center; margin-bottom: 20px; }
+        input[type="text"] { padding: 8px; width: 250px; margin: 5px; }
+        button { padding: 8px 12px; margin: 5px; border: none; cursor: pointer; }
+        .search-btn { background: #4CAF50; color: white; }
+        .delete-btn { background: #f44336; color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #333; color: white; }
+        .btn-container { text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><strong>Manage Users</strong></h1>
+    </div>
+
+    <div class="nav">
+        <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+        <a href="{{ url_for('manage_subjects') }}">Manage Subjects</a>
+        <a href="{{ url_for('manage_chapters') }}">Manage Chapters</a>
+        <a href="{{ url_for('manage_quizzes') }}">Manage Quizzes</a>
+        <a href="{{ url_for('manage_questions') }}">Manage Questions</a>
+        
+    </div>
+
+    <div class="container">
+        <h2>Users List</h2>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ url_for('manage_users') }}">
+            <input type="text" name="search" placeholder="Search by username" value="{{ request.args.get('search', '') }}">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if users %}
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td class="btn-container">
+                            <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" style="display:inline;">
+                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delate the user {{ user.username}} ?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center;">No users found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
